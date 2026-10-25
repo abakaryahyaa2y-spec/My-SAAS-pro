@@ -67,16 +67,24 @@ export async function middleware(request: NextRequest) {
     },
   });
 
-  // Récupération de l'utilisateur Supabase
+  // Récupération de l'utilisateur Supabase uniquement si de véritables clés sont configurées
   let user = null;
-  try {
-    const { data } = await supabase.auth.getUser();
-    user = data.user;
-  } catch {
-    // Si Supabase distant n'est pas encore configuré
+  const hasValidSupabase = 
+    process.env.NEXT_PUBLIC_SUPABASE_URL && 
+    !process.env.NEXT_PUBLIC_SUPABASE_URL.includes('demo') &&
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY &&
+    !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY.includes('demo');
+
+  if (hasValidSupabase) {
+    try {
+      const { data } = await supabase.auth.getUser();
+      user = data.user;
+    } catch {
+      // Erreur de connexion Supabase tolérée
+    }
   }
 
-  // Support du mode démonstration local pour tests immédiats sans configuration distante
+  // Support de l'authentification serveur (cookies)
   const isDemoAuthenticated = request.cookies.get('edusaas_demo_auth')?.value === 'true';
   const isDemoEmailVerified = request.cookies.get('edusaas_demo_email_verified')?.value !== 'false';
 

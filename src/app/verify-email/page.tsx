@@ -3,6 +3,7 @@ import { Suspense, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Mail, CheckCircle2, RefreshCw, ArrowRight, ShieldAlert } from 'lucide-react';
+import { verifyEmailAction } from '@/app/actions/auth';
 
 function VerifyEmailContent() {
   const router = useRouter();
@@ -19,8 +20,8 @@ function VerifyEmailContent() {
     }, 1200);
   };
 
-  const handleSimulateVerification = () => {
-    document.cookie = 'edusaas_demo_email_verified=true; path=/; max-age=86400';
+  const handleSimulateVerification = async () => {
+    await verifyEmailAction();
     router.push('/dashboard');
     router.refresh();
   };

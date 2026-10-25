@@ -29,9 +29,7 @@ export const registerSchema = z.object({
     .toLowerCase(),
   password: z
     .string()
-    .min(8, { message: 'Le mot de passe doit contenir au moins 8 caractères' })
-    .regex(/[A-Z]/, { message: 'Le mot de passe doit contenir au moins une lettre majuscule' })
-    .regex(/[0-9]/, { message: 'Le mot de passe doit contenir au moins un chiffre' }),
+    .min(6, { message: 'Le mot de passe doit contenir au moins 6 caractères' }),
 });
 
 export type LoginInput = z.infer<typeof loginSchema>;
